@@ -1,46 +1,20 @@
-import React,{useState,useEffect} from 'react';
-import { StyleSheet, View ,FlatList} from 'react-native';
-import NewsText from './components/NewsText';
-import Constants from 'expo-constants';
-import axios from 'axios';
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import NewsScreen from './Screens/NewsScreen';
+import ShowScreen from './Screens/ShowScreen';
 
-const URI = `https://newsapi.org/v2/top-headlines?country=jp&category=entertainment&apiKey=${Constants.expoConfig.extra.newsApiKey}`;
+const Stack = createNativeStackNavigator();
 
-export default function App() {
-
-  const [news,setNews] = useState([]);
-
-  useEffect(() => {
-    getNews();
-  },[]);
-
-  const getNews = async () => {
-    const response = await axios.get(URI);
-    console.log(response);
-    setNews(response.data.articles);
-  };
-
+function App() {
   return (
-    <View style={styles.container}>
-      <FlatList
-      data={news}
-      renderItem={({item}) => (
-        <NewsText 
-        title={item.title} 
-        subtitle={item.publishedAt}
-        imageurl={item.urlToImage}   
-        />
-    )}
-      keyExtractor={(item, index) => item.url || index.toString()}
-      />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="ニュースページ" component={NewsScreen} />
+        <Stack.Screen name="詳細ページ" component={ShowScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-
-  }
-});
+export default App;
