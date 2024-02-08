@@ -1,16 +1,23 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, SafeAreaView, TouchableOpacity } from 'react-native';
 
-const NewsText = ({imageurl,title,subtitle}) => {
+const NewsText = ({imageurl,title,subtitle,onPress}) => {
+
+  const deta = new Date(subtitle);
+  const year = deta.getFullYear(); //このメソッド
+  const month = deta.getMonth() + 1;
+  const day = deta.getDate();
+  const createdAt = year + '年' + month + '月' + day + '日';
+
   return (
-    <View style={styles.container}>
-      <View style={styles.box}>
+    <SafeAreaView style={styles.container}>
+      <TouchableOpacity style={styles.box} onPress={onPress} >
         <View style={styles.textbox}>
-          <Text style={styles.mainText}>
+          <Text numberOfLines={3} style={styles.mainText}>
             {title}
           </Text>
           <Text style={styles.subText}>
-            {subtitle}
+            {createdAt}
           </Text>
         </View>
         <View style={styles.imagebox}>
@@ -18,8 +25,8 @@ const NewsText = ({imageurl,title,subtitle}) => {
           style={{width: 100, height: 100}}
           source={{ url: imageurl }} />
         </View>
-      </View>
-    </View>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 }
 export default NewsText;
@@ -28,8 +35,8 @@ const styles = StyleSheet.create({
   box: {
     height: 100,
     width: "100%",
-    borderColor: 'black',
-    borderWidth: 2,
+    borderColor: 'green',
+    borderWidth: 1,
     flexDirection: 'row',
   },
 
@@ -44,11 +51,12 @@ const styles = StyleSheet.create({
   },
 
   mainText: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
   },
 
   subText: {
-    fontSize: 16,
+    fontSize: 13,
+    color: 'red',
   },
 });
