@@ -1,11 +1,38 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React,{useState,useEffect} from 'react';
+import { StyleSheet, View ,FlatList} from 'react-native';
+import NewsText from './components/NewsText';
+import Constants from 'expo-constants';
+import axios from 'axios';
+
+const URI = `https://newsapi.org/v2/top-headlines?country=jp&category=entertainment&apiKey=${Constants.expoConfig.extra.newsApiKey}`;
 
 export default function App() {
+
+  const [news,setNews] = useState([]);
+
+  useEffect(() => {
+    getNews();
+  },[]);
+
+  const getNews = async () => {
+    const response = await axios.get(URI);
+    console.log(response);
+    setNews(response.data.articles);
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <FlatList
+      data={news}
+      renderItem={({item}) => (
+        <NewsText 
+        title={item.title} 
+        subtitle={item.publishedAt}
+        imageurl={item.urlToImage}   
+        />
+    )}
+      keyExtractor={(item, index) => item.url || index.toString()}
+      />
     </View>
   );
 }
@@ -13,8 +40,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    justifyContent: 'space-between',
+
+  }
 });
